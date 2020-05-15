@@ -3,23 +3,23 @@
 INSTALLATION
 
 Create a conda environment:
-conda create --name myenv
+**conda create --name myenv**
 
 Add following dependencies:
-Rtree:
-conda install -c conda-forge rtree
+*Rtree:
+**conda install -c conda-forge rtree**
 
-Scipy:
-conda install -c anaconda scipy
+*Scipy:
+**conda install -c anaconda scipy**
 
-Networkx:
-conda install -c anaconda networkx
+*Networkx:
+**conda install -c anaconda networkx**
 
-Pyglet:
-conda install -c conda-forge pyglet 
+*Pyglet:
+**conda install -c conda-forge pyglet** 
 
-Install trimesh:
-Pip install trimesh
+*Install trimesh:
+**Pip install trimesh**
 
 You can also download their git repo to work with some of their examples:
 https://github.com/mikedh/trimesh
