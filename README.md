@@ -6,6 +6,7 @@ Create a conda environment:
 **conda create --name myenv**
 
 Add following dependencies:
+
 *Rtree:*
 **conda install -c conda-forge rtree**
 
