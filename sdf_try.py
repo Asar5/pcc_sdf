@@ -11,7 +11,7 @@ import trimesh
 
 if __name__ == '__main__':
 
-    mesh = trimesh.load(trimesh.primitives.Sphere())#../models/Alan_4.stl')#trimesh.primitives.Sphere()
+    mesh = trimesh.load(trimesh.primitives.Sphere())#../trimesh/models/Alan_4.stl')#trimesh.primitives.Sphere()
 
     # arbitrary indices to test with
     start = [[0,0,0]]#, [0,1,1], [1,1,1]]
