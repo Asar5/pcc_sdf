@@ -19,10 +19,10 @@ import numpy as np
 import pyrender
 from multipledispatch import dispatch
 
-fname_mesh = '../trimesh/models/Alan_4.stl' #trimesh.primitives.Sphere() '../trimesh/models/Alan_4.stl'
-fname_save = 'voxel_mold' #'voxel_mold'
+fname_mesh = 'sprayer.STL' #trimesh.primitives.Sphere() '../trimesh/models/Alan_4.stl'
+fname_save = 'voxel_sprayer' #'voxel_mold'
 
-save_vox_normals = 'vox_normals'
+save_vox_normals = 'vox_normals_new'
 
 def save_mesh(fname_mesh, fname_save):
 	mesh = trimesh.load(fname_mesh) 
@@ -54,7 +54,7 @@ def recontruct_mesh(voxels):
 ###########'+'ve distance outside the mesh
 @dispatch(trimesh.base.Trimesh)
 def find_sdf(mesh):
-	points = [[32,4,32]]#[[32,0,32], [32,4,32], [32,8,32], [32,12,32], [32,16,32], [32,20,32], [32,24,32], [32,28,32], [32,32,32], [32,36,32], [32,40,32], [32,44,32], [32,48,32], [32,52,32], [32,56,32], [32,60,32], [32,64,32]]#,[150,75,120],[50,150,150],[0,0,0]]
+	points = [[0,0,32]]#[[32,0,32], [32,4,32], [32,8,32], [32,12,32], [32,16,32], [32,20,32], [32,24,32], [32,28,32], [32,32,32], [32,36,32], [32,40,32], [32,44,32], [32,48,32], [32,52,32], [32,56,32], [32,60,32], [32,64,32]]#,[150,75,120],[50,150,150],[0,0,0]]
 	points_visual = trimesh.points.PointCloud(points)
 	scene = trimesh.Scene([points_visual, mesh])
 	(scene).show(smooth=False)
@@ -140,22 +140,37 @@ def scan_convert(start_pos, angle, length):
 
 	return new_coords_list
 
+#def angle_coverage():
+
+
+
 def check_for_collision(voxels, new_coords_list):
 	z = 32
-	threshold = 0.0
+	#TODO:convert from dist btw stl origin to dist btw sprayer and point
+	threshold_min = 0.0 
+	threshold_max = 0.2
+	distance_coverage = 0.0
 	for length in range(len(new_coords_list)):
 		x = int(new_coords_list[length][0])
 		y = int(new_coords_list[length][1])
 		#z = new_coords_list[length][2]
-		if (voxels[x][y][z]<threshold):
+		if (voxels[x][y][z]<threshold_min):
 			print ("COLLISION AT", x, y, z, voxels[x][y][z])
-			return True
+			dist_coverage = 0.0
 
-	return False
+		elif (voxels[x][y][z] > threshold_min and voxels[x][y][z] < threshold_max):
+			dist_coverage = -5 * voxels[x][y][z] + 1 #straight line eq (change this maybe?)
+		else:
+			dist_coverage = 1.0
 
-#voxels = save_mesh(fname_mesh, fname_save)
-#vox_normals = calc_gradients(voxels)
+	return dist_coverage
+
+voxels = save_mesh(fname_mesh, fname_save)
+#vox_normals = load_voxel('vox_normals.npy')
 voxels = load_voxel(fname_save+'.npy')
+####YES OR NO??
+##vox_normals = np.reshape(vox_normals, (66,66,66,3))
+#print ("vox", voxels.shape, "normal", vox_normals.shape)
 start_pos = [32,0]
 angle = np.pi/2
 length = 5
@@ -173,7 +188,7 @@ print ("found sdf for a few points and visualised")
 
 
 '''print("Loaded voxel")
-print ("Voxel 000", voxels[0][0][0]).
+print ("Voxel 000", voxels[0][0][0])
 print ("Voxel 001", voxels[0][0][1])
 print ("Voxel 002", voxels[0][0][2])#[30][30][2])'''
 #vox_normals = np.load(save_vox_normals+'.npy')
